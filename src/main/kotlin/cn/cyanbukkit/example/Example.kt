@@ -4,6 +4,7 @@ import cn.cyanbukkit.example.cyanlib.launcher.CyanPluginLauncher.cyanPlugin
 import cn.cyanbukkit.example.listener.PlayerBindsListener
 import cn.cyanbukkit.example.utils.Region
 import org.bukkit.Bukkit
+import org.bukkit.Material
 import org.bukkit.entity.Player
 import java.util.*
 
@@ -29,10 +30,22 @@ object Example {
                 if (regionBlocks.isEmpty()) {
                     Bukkit.getScheduler().cancelTask(taskID)
                     return@runTaskTimer
+                } else {
+                    var b = regionBlocks.removeAt(0)
+                    while (b.type == null || b.type == Material.AIR || b.isEmpty || b.type.name == "AIR") {
+                        print("§c§l跳过空气方块")
+                        if (regionBlocks.isEmpty()) {
+                            Bukkit.getScheduler().cancelTask(taskID)
+                            return@runTaskTimer
+                        } else {
+                            b = regionBlocks.removeAt(0)
+                        }
+                    }
+                    println("§a§l成功破坏方块 ${b.type}")
+                    b.breakNaturally()
                 }
-                val b = regionBlocks.removeAt(0)
-                b.breakNaturally()
-            }, 0, 20).taskId
+            }, 0, 2).taskId
+            p.sendMessage("§a§l任务已启动！ $taskID")
         }
     }
 

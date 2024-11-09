@@ -17,8 +17,9 @@ data class Region(
         val maxY = maxOf(y1, y2)
         val minZ = minOf(z1, z2)
         val maxZ = maxOf(z1, z2)
-        for (x in minX..maxX) {
-            for (y in minY..maxY) {
+
+        for (y in maxY downTo minY) {
+            for (x in minX..maxX) {
                 for (z in minZ..maxZ) {
                     blocks.add(world.getBlockAt(x, y, z))
                 }
